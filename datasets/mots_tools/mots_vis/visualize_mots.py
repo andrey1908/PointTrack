@@ -2,6 +2,10 @@ import sys
 import os
 import colorsys
 
+import_path = os.path.join(os.getcwd(), __file__, '../..')
+import_path = os.path.normpath(import_path)
+sys.path.insert(1, import_path)
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pycocotools.mask as rletools
@@ -45,7 +49,7 @@ def process_sequence(seq_id, tracks_folder, img_folder, output_folder, max_frame
   print("Processing sequence", seq_id)
   os.makedirs(output_folder + "/" + seq_id, exist_ok=True)
   tracks = load_sequences(tracks_folder, [seq_id])[seq_id]
-  max_frames_seq = max_frames[seq_id]
+  max_frames_seq = len(tracks) - 1
   visualize_sequences(seq_id, tracks, max_frames_seq, img_folder, output_folder, draw_boxes, create_video)
 
 
@@ -104,16 +108,15 @@ def visualize_sequences(seq_id, tracks, max_frames_seq, img_folder, output_folde
 
 
 def main():
-  if len(sys.argv) != 5:
-    print("Usage: python visualize_mots.py tracks_folder(gt or tracker results) img_folder output_folder seqmap")
+  if len(sys.argv) != 4:
+    print("Usage: python visualize_mots.py tracks_folder(gt or tracker results) img_folder output_folder")
     sys.exit(1)
 
   tracks_folder = sys.argv[1]
   img_folder = sys.argv[2]
   output_folder = sys.argv[3]
-  seqmap_filename = sys.argv[4]
 
-  seqmap, max_frames = load_seqmap(seqmap_filename)
+  seqmap, max_frames = [""], 1
   process_sequence_part = partial(process_sequence, max_frames=max_frames,
                                   tracks_folder=tracks_folder, img_folder=img_folder, output_folder=output_folder)
 

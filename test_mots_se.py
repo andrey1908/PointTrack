@@ -95,6 +95,7 @@ with torch.no_grad():
     if os.path.isdir(args['save_dir']):
         shutil.rmtree(args['save_dir'])
     os.mkdir(args['save_dir'])
+    # obj_poses = list()
     # try:
     for i, sample in enumerate(tqdm(dataset_it)):
         base = sample['mot_im_name'][0].replace('/', '_').replace('.png', '.pkl')
@@ -117,11 +118,42 @@ with torch.no_grad():
         # cv2.imwrite("/home/xubb/1.jpg", instance_map.numpy() * 50)
         save_pickle2(os.path.join(args['save_dir'], base), instance_map_np)
 
-    # eval on args['save_dir']
-    p = subprocess.run([pythonPath, "-u", "test_tracking.py", 'car_test_tracking_val'], stdout=subprocess.PIPE, cwd=rootDir)
+        # instance_map_np = dColors[instance_map_np]
+        # im = Image.fromarray(instance_map_np, 'RGB')
+        # im.save(os.path.join('car_SE_val_prediction', base[0:-4].zfill(6) + '.png'))
+        '''
+        lines = list()
+        obj_ids = set()
+        for y in range(instance_map_np.shape[0]):
+            line = str()
+            for x in range(instance_map_np.shape[1]):
+                if instance_map_np[y][x] != 0:
+                    obj_ids.add(instance_map_np[y][x])
+                line = line + str(instance_map_np[y][x]) + ' '
+            if y != instance_map_np.shape[0] - 1:
+                line = line + '\n'
+            lines.append(line)
 
-    pout = p.stdout.decode("utf-8")
+        out_file_name = os.path.join('/media/cds-jetson-host/data/data_odometry_color/dataset/sequences/03/semantic', base[5:-4].zfill(6) + '.txt')
+        with open(out_file_name, 'w') as f:
+            f.writelines(lines)
+
+        for obj_id in obj_ids:
+            obj_pose = '\t'.join([base[5:-4], str(obj_id)] + ['0'] * 8) + '\n'
+            obj_poses.append(obj_pose)
+        '''
+
+    '''
+    obj_poses[-1] = obj_poses[-1][:-1]
+    with open('/media/cds-jetson-host/data/data_odometry_color/dataset/sequences/03/object_pose.txt', 'w') as f:
+        f.writelines(obj_poses)
+    '''
+
+    # eval on args['save_dir']
+    # p = subprocess.run([python_path, "-u", "test_tracking.py", 'car_test_tracking_val'])
+
+    # pout = p.stdout.decode("utf-8")
     # class_str = "Evaluate class: Cars"
     # pout = pout[pout.find(class_str):]
     # acc = pout[pout.find('all   '):][6:26].strip().split(' ')
-    print(pout, '\n\n\n')
+    # print(pout, '\n\n\n')

@@ -17,15 +17,15 @@ args = dict(
     display=False,
 
     save=True,
-    save_dir='./tracks_car_pointtrack_val/',
-    checkpoint_path='./car_finetune_tracking/checkpoint.pth',
-    # checkpoint_path='./pointTrack_weights/PointTrack.pthCar',
-    run_eval=True,
+    save_file=tracking_output,
+    checkpoint_path=tracking_model_file,
+    run_eval=False,
 
     dataset= {
         'name': 'mots_track_val_env_offset',
         'kwargs': {
-            'root_dir': kittiRoot,
+            'root_dir': images_folder,
+            'source_dir': segmentation_output_folder,
             'type': 'val',
             'num_points': 1500,
             'box': True,

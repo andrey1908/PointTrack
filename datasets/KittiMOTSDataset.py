@@ -78,7 +78,7 @@ class MOTSTest(Dataset):
 
 class MOTSCarsVal(Dataset):
     SEQ_IDS_TRAIN = ["%04d" % idx for idx in [0, 1, 3, 4, 5, 9, 11, 12, 15, 17, 19, 20]]
-    SEQ_IDS_VAL = ["%04d" % idx for idx in [2, 6, 7, 8, 10, 13, 14, 16, 18]]
+    SEQ_IDS_VAL = [""]
 
     def __init__(self, root_dir='./', type="train", class_id=26, size=None, transform=None, batch=False, batch_num=8):
 
@@ -93,13 +93,13 @@ class MOTSCarsVal(Dataset):
         self.size = size
         self.transform = transform
 
-        self.mots_instance_root = os.path.join(kittiRoot, 'instances')
-        self.mots_image_root = os.path.join(kittiRoot, 'images')
+        self.mots_instance_root = images_folder
+        self.mots_image_root = images_folder
 
         self.mots_car_pairs = []
         for subdir in self.sequence:
             instance_list = sorted(make_dataset(os.path.join(self.mots_instance_root, subdir), suffix='.png'))
-            instance_list = ['/'.join(el.split('/')[-2:]) for el in instance_list]
+            instance_list = ['/'.join(el.split('/')[-1:]) for el in instance_list]
             for i in instance_list:
                 self.mots_car_pairs.append(i)
 
@@ -182,8 +182,11 @@ class MOTSTrackCarsValOffset(Dataset):
                               '0007': 215, '0014': 850, '0025': 176, '0027': 85, '0011': 774, '0010': 1176, '0006': 114,
                               '0002': 243}
 
+    SEQ_IDS_VAL_CUSTOM = [""]
+    TIMESTEPS_PER_SEQ_CUSTOM = {}
+
     def __init__(self, root_dir='./', type="train", num_points=250, transform=None, random_select=False, az=False,
-                 border=False, env=False, gt=True, box=False, test=False, category=False, ex=0.2):
+                 border=False, env=False, gt=True, box=False, test=False, category=False, ex=0.2, source_dir=None):
 
         print('MOTS Dataset created')
         type = 'training' if type in 'training' else 'testing'
@@ -192,10 +195,10 @@ class MOTSTrackCarsValOffset(Dataset):
 
         self.transform = transform
         if not test:
-            ids = self.SEQ_IDS_VAL
-            timestamps = self.TIMESTEPS_PER_SEQ
-            self.image_root = os.path.join(kittiRoot, 'images')
-            self.mots_root = os.path.join(systemRoot, 'SpatialEmbeddings/car_SE_val_prediction')
+            ids = self.SEQ_IDS_VAL_CUSTOM
+            timestamps = self.TIMESTEPS_PER_SEQ_CUSTOM
+            self.image_root = images_folder
+            self.mots_root = source_dir
         else:
             ids = self.SEQ_IDS_TEST
             timestamps = self.TIMESTEPS_PER_SEQ_TEST
@@ -207,9 +210,13 @@ class MOTSTrackCarsValOffset(Dataset):
 
         self.mots_car_sequence = []
         for valF in ids:
-            nums = timestamps[valF]
+            files = os.listdir(os.path.join(self.mots_root, valF))
+            nums = 0
+            for file in files:
+                if file.endswith('.pkl'):
+                    nums += 1
             for i in range(nums):
-                pklPath = os.path.join(self.mots_root, valF + '_' + str(i) + '.pkl')
+                pklPath = os.path.join(self.mots_root, valF + str(i) + '.pkl')
                 if os.path.isfile(pklPath):
                     self.mots_car_sequence.append(pklPath)
 
@@ -258,7 +265,8 @@ class MOTSTrackCarsValOffset(Dataset):
         # random select and image and the next one
         path = self.mots_car_sequence[index]
         instance_map = load_pickle(path)
-        subf, frameCount = os.path.basename(path)[:-4].split('_')
+        subf = ""
+        frameCount = os.path.basename(path)[:-4]
         imgPath = os.path.join(self.image_root, subf, '%06d.png' % int(float(frameCount)))
         img = cv2.imread(imgPath)
 

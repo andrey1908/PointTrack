@@ -92,15 +92,15 @@ def newElem(t, track_id, embed, mask, points=None, class_id=1):
 
 class TrackHelper(object):
 
-    def __init__(self, save_dir, margin, t_car=0.8165986526897969, t_person=0.47985540892434836, alive_car=5, alive_person=30, car=True,
+    def __init__(self, save_file, margin, t_car=0.8165986526897969, t_person=0.47985540892434836, alive_car=5, alive_person=30, car=True,
                  mask_iou=False, mask_iou_scale_person=0.54, mask_iou_scale_car=0.74, cosine=False):
         # mask_iou_scale_car 0.7~0.8
         # t_car 0.7~1.0 or 6.0
         self.margin = margin
-        self.save_dir = save_dir
+        self.save_file = save_file
         self.all_tracks = []
         self.active_tracks = []
-        self.current_video= None
+        self.current_video = ''
         self.next_inst_id = None
         self.mask_iou = mask_iou
         self.cosine = cosine
@@ -127,7 +127,7 @@ class TrackHelper(object):
 
     def export_last_video(self):
         print('Writing ', self.current_video)
-        out_filename = os.path.join(self.save_dir, self.current_video + ".txt")
+        out_filename = self.save_file
         with open(out_filename, "w") as f:
             for track in self.all_tracks:
                 print(track.t, track.track_id, track.class_id, *track.mask['size'], track.mask['counts'].decode(encoding='UTF-8'), file=f)

@@ -12,18 +12,14 @@ class SegmentedObject:
     self.track_id = track_id
 
 
-def load_sequences(path, seqmap):
+def load_sequences(seq_path, seqmap):
   objects_per_frame_per_sequence = {}
   for seq in seqmap:
     print("Loading sequence", seq)
-    seq_path_folder = os.path.join(path, seq)
-    seq_path_txt = os.path.join(path, seq + ".txt")
-    if os.path.isdir(seq_path_folder):
-      objects_per_frame_per_sequence[seq] = load_images_for_folder(seq_path_folder)
-    elif os.path.exists(seq_path_txt):
-      objects_per_frame_per_sequence[seq] = load_txt(seq_path_txt)
+    if os.path.exists(seq_path):
+      objects_per_frame_per_sequence[seq] = load_txt(seq_path)
     else:
-      assert False, "Can't find data in directory " + path
+      assert False, "Can't find file " + seq_path
 
   return objects_per_frame_per_sequence
 

@@ -25,7 +25,7 @@ args = dict(
     train_dataset = {
         'name': 'mots_track_cars_train',
         'kwargs': {
-            'root_dir': kittiRoot,
+            'root_dir': images_folder,
             'type': 'train',
             'size': 500,
             'num_points': 1500,

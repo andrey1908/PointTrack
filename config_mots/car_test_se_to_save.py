@@ -19,7 +19,7 @@ args = dict(
     n_sigma=n_sigma,
 
     save=True,
-    checkpoint_path='./pointTrack_weights/best_seed_model.pthCar',
+    checkpoint_path=segmentation_model_file,
 
     min_pixel=160,
     threshold=0.94,
@@ -31,11 +31,11 @@ args = dict(
         }
     },
 
-    save_dir='./car_SE_val_prediction/',
+    save_dir=segmentation_output_folder,
     dataset= {
         'name': 'mots_cars_val',
         'kwargs': {
-            'root_dir': kittiRoot,
+            'root_dir': images_folder,
             # 'type': 'train',
             'type': 'val',
             # 'size': 1000,
@@ -44,7 +44,7 @@ args = dict(
                     'name': 'LU_Pad',
                     'opts': {
                         'keys': ('mot_image', 'mot_instance','mot_label'),
-                        'size': (384, 1248),
+                        'size': (384, 1248),  # input tensor size, not image size
                     }
                 },
                 {

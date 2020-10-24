@@ -33,10 +33,6 @@ else:
     plt.ioff()
     plt.switch_backend("agg")
 
-if args['save']:
-    if not os.path.exists(args['save_dir']):
-        os.makedirs(args['save_dir'])
-
 # set device
 device = torch.device("cuda:0" if args['cuda'] else "cpu")
 
@@ -80,7 +76,7 @@ dColors = [(128, 0, 0), (170, 110, 40), (128, 128, 0), (0, 128, 128), (0, 0, 128
         , (255, 225, 25), (210, 245, 60), (60, 180, 75), (70, 240, 240), (0, 130, 200), (145, 30, 180), (240, 50, 230)
         , (128, 128, 128), (250, 190, 190), (255, 215, 180), (255, 250, 200), (170, 255, 195), (230, 190, 255), (255, 255, 255)]
 
-trackHelper = TrackHelper(args['save_dir'], model.module.margin, alive_car=30, car=args['car'] if 'car' in args.keys() else True,
+trackHelper = TrackHelper(args['save_file'], model.module.margin, alive_car=30, car=args['car'] if 'car' in args.keys() else True,
                           mask_iou=True)
 with torch.no_grad():
 

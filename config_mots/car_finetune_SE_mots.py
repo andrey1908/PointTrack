@@ -26,7 +26,7 @@ args = dict(
     train_dataset = {
         'name': 'mots_cars',
         'kwargs': {
-            'root_dir': kittiRoot,
+            'root_dir': images_folder,
             'type': 'train',
             'kins': False,
             'size': 1000,
@@ -56,7 +56,7 @@ args = dict(
     val_dataset = {
         'name': 'mots_cars',
         'kwargs': {
-            'root_dir': kittiRoot,
+            'root_dir': images_folder,
             'type': 'val',
             # 'size': 500,
             'transform': my_transforms.get_transform([
