@@ -120,11 +120,11 @@ def make_dataset(dir, suffix=None, max=None):
     images = []
     assert os.path.isdir(dir), '%s is not a valid directory' % dir
 
-    for root, _, fnames in sorted(os.walk(dir)):
-        for fname in fnames:
-            if is_image_file(fname, suffix):
-                path = os.path.join(root, fname)
-                images.append(path)
+    files = sorted(os.listdir(dir))
+    for f in files:
+        file = os.path.join(dir, f)
+        if is_image_file(file, suffix):
+            images.append(file)
     if max is not None:
         return images[:max]
     else:
