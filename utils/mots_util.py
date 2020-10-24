@@ -128,6 +128,7 @@ class TrackHelper(object):
     def export_last_video(self):
         print('Writing ', self.current_video)
         out_filename = self.save_file
+        os.makedirs(os.path.dirname(out_filename), exist_ok=True)
         with open(out_filename, "w") as f:
             for track in self.all_tracks:
                 print(track.t, track.track_id, track.class_id, *track.mask['size'], track.mask['counts'].decode(encoding='UTF-8'), file=f)

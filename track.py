@@ -7,8 +7,8 @@ import sys
 def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-img-fld', '--images-folder', type=str, required=True)
-    parser.add_argument('-segm-out-fld', '--segmentation-output-folder', type=str, required=True)
-    parser.add_argument('-tracking-out', '--tracking-output-file', type=str, required=True, help='.txt file')
+    parser.add_argument('-segm-out-fld', '--segmentation-output-folder', type=str, required=True, help='Segmentation results')
+    parser.add_argument('-tracking-out', '--tracking-output-file', type=str, required=True, help='Tracking results. Extension must be .txt')
     parser.add_argument('-segm-model', '--segmentation-model-file', type=str, default='./pointTrack_weights/best_seed_model.pthCar')
     parser.add_argument('-tracking-model', '--tracking-model-file', type=str, default='./pointTrack_weights/PointTrack.pthCar')
     return parser

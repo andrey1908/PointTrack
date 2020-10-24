@@ -109,7 +109,7 @@ def visualize_sequences(seq_id, tracks, max_frames_seq, img_folder, output_folde
 
 def main():
   if len(sys.argv) != 4:
-    print("Usage: python visualize_mots.py tracks_folder(gt or tracker results) img_folder output_folder")
+    print("Usage: python visualize_mots.py tracking_results(.txt file) images_folder output_folder")
     sys.exit(1)
 
   tracks_folder = sys.argv[1]
